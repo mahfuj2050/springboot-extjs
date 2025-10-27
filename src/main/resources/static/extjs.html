@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Product Management - ExtJS Version</title>
+    
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/extjs/6.2.0/classic/theme-triton/resources/theme-triton-all.css">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/extjs/6.2.0/ext-all.js"></script>
+    
+    <script type="text/javascript">
+        window.onerror = function(msg, url, line) {
+            console.error('Error:', msg, 'Line:', line);
+            return false;
+        };
+        
+        Ext.onReady(function() {
+            console.log('ExtJS Ready - Version:', Ext.getVersion().version);
+            
+            Ext.define('Product', {
+                extend: 'Ext.data.Model',
+                fields: ['id', 'name', 'description', 'price', 'quantity']
+            });
+            
+            var store = Ext.create('Ext.data.Store', {
+                model: 'Product',
+                proxy: {
+                    type: 'ajax',
+                    api: {
+                        read: '/api/products',
+                        create: '/api/products',
+                        update: '/api/products',
+                        destroy: '/api/products'
+                    },
+                    reader: {
+                        type: 'json',
+                        rootProperty: 'data'
+                    },
+                    writer: {
+                        type: 'json',
+                        writeAllFields: true
+                    },
+                    actionMethods: {
+                        create: 'POST',
+                        read: 'GET',
+                        update: 'PUT',
+                        destroy: 'DELETE'
+                    },
+                    buildUrl: function(request) {
+                        var me = this,
+                            operation = request.getOperation(),
+                            records = operation.getRecords() || [],
+                            record = records[0],
+                            url = me.getUrl(request);
+                        
+                        if (record && record.getId() && (operation.isUpdateOperation() || operation.isDestroyOperation())) {
+                            url = url + '/' + record.getId();
+                        }
+                        
+                        request.setUrl(url);
+                        return me.callParent([request]);
+                    }
+                },
+                autoLoad: true
+            });
+            
+            function showProductForm(record) {
+                var form = Ext.create('Ext.window.Window', {
+                    title: record ? 'Edit Product' : 'Add Product',
+                    width: 400,
+                    modal: true,
+                    layout: 'fit',
+                    items: [{
+                        xtype: 'form',
+                        bodyPadding: 10,
+                        defaults: {
+                            anchor: '100%',
+                            labelWidth: 100
+                        },
+                        items: [{
+                            xtype: 'textfield',
+                            name: 'name',
+                            fieldLabel: 'Name',
+                            allowBlank: false
+                        }, {
+                            xtype: 'textfield',
+                            name: 'description',
+                            fieldLabel: 'Description'
+                        }, {
+                            xtype: 'numberfield',
+                            name: 'price',
+                            fieldLabel: 'Price',
+                            allowBlank: false,
+                            minValue: 0,
+                            decimalPrecision: 2
+                        }, {
+                            xtype: 'numberfield',
+                            name: 'quantity',
+                            fieldLabel: 'Quantity',
+                            value: 0,
+                            minValue: 0,
+                            allowDecimals: false
+                        }]
+                    }],
+                    buttons: [{
+                        text: 'Save',
+                        handler: function() {
+                            var win = this.up('window'),
+                                formPanel = win.down('form'),
+                                values = formPanel.getValues();
+                            
+                            if (formPanel.isValid()) {
+                                if (record) {
+                                    record.set(values);
+                                } else {
+                                    record = Ext.create('Product', values);
+                                    store.add(record);
+                                }
+                                
+                                store.sync({
+                                    success: function() {
+                                        Ext.toast('Product saved successfully!');
+                                        store.reload();
+                                        win.close();
+                                    },
+                                    failure: function() {
+                                        Ext.toast('Failed to save product');
+                                        store.reload();
+                                    }
+                                });
+                            }
+                        }
+                    }, {
+                        text: 'Cancel',
+                        handler: function() {
+                            this.up('window').close();
+                        }
+                    }]
+                });
+                
+                if (record) {
+                    form.down('form').loadRecord(record);
+                }
+                
+                form.show();
+            }
+            
+            var grid = Ext.create('Ext.grid.Panel', {
+                renderTo: Ext.getBody(),
+                title: 'Product Management System - ExtJS 6.2',
+                width: '100%',
+                height: 600,
+                store: store,
+                columns: [{
+                    text: 'ID',
+                    dataIndex: 'id',
+                    width: 60
+                }, {
+                    text: 'Name',
+                    dataIndex: 'name',
+                    flex: 1
+                }, {
+                    text: 'Description',
+                    dataIndex: 'description',
+                    flex: 2
+                }, {
+                    text: 'Price',
+                    dataIndex: 'price',
+                    width: 100,
+                    renderer: function(value) {
+                        return '$' + Ext.util.Format.number(value, '0.00');
+                    }
+                }, {
+                    text: 'Quantity',
+                    dataIndex: 'quantity',
+                    width: 100
+                }, {
+                    xtype: 'actioncolumn',
+                    text: 'Actions',
+                    width: 100,
+                    items: [{
+                        iconCls: 'x-fa fa-edit',
+                        tooltip: 'Edit',
+                        handler: function(grid, rowIndex) {
+                            var record = grid.getStore().getAt(rowIndex);
+                            showProductForm(record);
+                        }
+                    }, {
+                        iconCls: 'x-fa fa-trash',
+                        tooltip: 'Delete',
+                        handler: function(grid, rowIndex) {
+                            var record = grid.getStore().getAt(rowIndex);
+                            Ext.Msg.confirm('Confirm', 'Delete this product?', function(btn) {
+                                if (btn === 'yes') {
+                                    store.remove(record);
+                                    store.sync({
+                                        success: function() {
+                                            Ext.toast('Product deleted successfully!');
+                                            store.reload();
+                                        },
+                                        failure: function() {
+                                            Ext.toast('Failed to delete product');
+                                            store.reload();
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    }]
+                }],
+                tbar: [{
+                    text: 'Add Product',
+                    iconCls: 'x-fa fa-plus',
+                    handler: function() {
+                        showProductForm(null);
+                    }
+                }, {
+                    text: 'Refresh',
+                    iconCls: 'x-fa fa-refresh',
+                    handler: function() {
+                        store.reload();
+                    }
+                }, '->', {
+                    xtype: 'component',
+                    html: '<a href="/" style="color:#333;text-decoration:none;">← Back to Vanilla JS Version</a>',
+                    style: 'padding: 0 10px; line-height: 32px;'
+                }]
+            });
+            
+            console.log('Grid created successfully');
+        });
+    </script>
+</head>
+<body></body>
+</html>

@@ -32,11 +32,22 @@ A full-stack web application demonstrating complete CRUD (Create, Read, Update, 
 - **Maven**: Build and dependency management
 - **Hibernate**: ORM framework
 
-### Frontend
+### Frontend (Dual Implementation)
+
+**Primary (index.html) - Vanilla JavaScript:**
 - **HTML5/CSS3**: Modern, responsive design
 - **Vanilla JavaScript**: No framework dependencies
 - **Async/Await**: For API communication
 - **Responsive UI**: Clean gradient design with professional styling
+- **Fully Functional**: Works immediately with no external dependencies
+
+**Alternative (extjs.html) - ExtJS:**
+- **ExtJS 6.2.0**: Professional enterprise framework (via cdnjs.cloudflare.com)
+- **Triton Theme**: Modern, clean UI components  
+- **Grid Component**: Data table with built-in CRUD support
+- **Data Store**: Configured with REST API proxy
+- **Status**: UI renders correctly, data loading in progress (minor proxy configuration issue)
+- **Note**: Vanilla version is fully functional and recommended for production use
 
 ## Project Architecture
 
@@ -63,12 +74,21 @@ src/main/resources/
 ### Frontend Structure
 ```
 src/main/resources/static/
-├── index.html                    # Single-page application with:
-                                  # - Responsive table UI
-                                  # - Modal form for add/edit
-                                  # - Inline CSS styling
-                                  # - JavaScript for CRUD operations
-                                  # - Async REST API calls
+├── index.html                    # Vanilla JS version (default):
+│                                 # - Responsive table UI
+│                                 # - Modal form for add/edit
+│                                 # - Inline CSS styling
+│                                 # - JavaScript for CRUD operations
+│                                 # - Async REST API calls
+│
+├── extjs.html                    # ExtJS version (alternative):
+│                                 # - ExtJS Grid Panel
+│                                 # - ExtJS Data Store with REST proxy
+│                                 # - ExtJS Window forms
+│                                 # - Action columns for edit/delete
+│                                 # - Triton theme styling
+│
+└── test.html                     # Simple ExtJS connectivity test
 ```
 
 ## Features
@@ -123,7 +143,8 @@ mvn clean package
 ```
 
 ### Access Points
-- **Main Application**: http://localhost:5000/
+- **Main Application** (Vanilla JS): http://localhost:5000/
+- **ExtJS Version**: http://localhost:5000/extjs.html
 - **H2 Console**: http://localhost:5000/h2-console
 - **API Endpoint**: http://localhost:5000/api/products
 

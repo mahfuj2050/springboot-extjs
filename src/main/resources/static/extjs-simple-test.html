@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ExtJS CDN Test</title>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/extjs/6.2.0/classic/theme-triton/resources/theme-triton-all.css">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/extjs/6.2.0/ext-all.js"></script>
+    <script>
+        console.log('Script loaded');
+        
+        window.onerror = function(msg, url, line, col, error) {
+            document.body.innerHTML += '<div style="color:red;padding:20px;font-family:monospace;">ERROR: ' + msg + '<br>Line: ' + line + '</div>';
+            return false;
+        };
+        
+        Ext.onReady(function() {
+            console.log('ExtJS Ready!');
+            console.log('ExtJS version:', Ext.getVersion().version);
+            
+            Ext.create('Ext.Panel', {
+                renderTo: Ext.getBody(),
+                title: 'ExtJS Test - IT WORKS!',
+                width: 400,
+                height: 200,
+                html: '<h2 style="padding:20px;">ExtJS is loaded and functional!</h2><p style="padding:0 20px;">Version: ' + Ext.getVersion().version + '</p>',
+                style: 'margin: 50px;'
+            });
+        });
+        
+        setTimeout(function() {
+            if (!window.Ext) {
+                document.body.innerHTML = '<div style="color:red;padding:20px;font-family:Arial;">ExtJS failed to load from CDN</div>';
+            }
+        }, 5000);
+    </script>
+</head>
+<body>
+    <div style="padding:20px;font-family:Arial;">Loading ExtJS from CDN... Please wait.</div>
+</body>
+</html>
