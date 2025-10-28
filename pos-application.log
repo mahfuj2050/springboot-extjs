@@ -1,0 +1,12 @@
+2025-10-28T09:31:56.808+06:00  WARN 10952 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=10h46m48s63ms864µs800ns).
+2025-10-28T09:33:07.437+06:00  INFO 10952 --- [RMI TCP Connection(186)-127.0.0.1] inMXBeanRegistrar$SpringApplicationAdmin : Application shutdown requested.
+2025-10-28T09:33:07.469+06:00  INFO 10952 --- [RMI TCP Connection(186)-127.0.0.1] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
+2025-10-28T09:33:07.477+06:00  INFO 10952 --- [RMI TCP Connection(186)-127.0.0.1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Destroying Spring FrameworkServlet 'dispatcherServlet'
+2025-10-28T09:33:07.500+06:00  INFO 10952 --- [RMI TCP Connection(186)-127.0.0.1] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-10-28T09:33:07.500+06:00 DEBUG 10952 --- [RMI TCP Connection(186)-127.0.0.1] o.hibernate.internal.SessionFactoryImpl  : HHH000031: Closing
+2025-10-28T09:33:07.512+06:00 TRACE 10952 --- [RMI TCP Connection(186)-127.0.0.1] o.h.type.spi.TypeConfiguration$Scope     : Handling #sessionFactoryClosed from [org.hibernate.internal.SessionFactoryImpl@5065bdac] for TypeConfiguration
+2025-10-28T09:33:07.512+06:00 DEBUG 10952 --- [RMI TCP Connection(186)-127.0.0.1] o.h.type.spi.TypeConfiguration$Scope     : Un-scoping TypeConfiguration [org.hibernate.type.spi.TypeConfiguration$Scope@159a7f24] from SessionFactory [org.hibernate.internal.SessionFactoryImpl@5065bdac]
+2025-10-28T09:33:07.512+06:00 DEBUG 10952 --- [RMI TCP Connection(186)-127.0.0.1] o.h.s.i.AbstractServiceRegistryImpl      : Implicitly destroying ServiceRegistry on de-registration of all child ServiceRegistries
+2025-10-28T09:33:07.517+06:00 DEBUG 10952 --- [RMI TCP Connection(186)-127.0.0.1] o.h.b.r.i.BootstrapServiceRegistryImpl   : Implicitly destroying Boot-strap registry on de-registration of all child ServiceRegistries
+2025-10-28T09:33:07.518+06:00  INFO 10952 --- [RMI TCP Connection(186)-127.0.0.1] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2025-10-28T09:33:07.518+06:00  INFO 10952 --- [RMI TCP Connection(186)-127.0.0.1] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.

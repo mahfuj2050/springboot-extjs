@@ -6,11 +6,14 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/products")
@@ -47,7 +50,15 @@ public class ProductController {
     }
     
     @PostMapping
-    public ResponseEntity<Map<String, Object>> createProduct(@Valid @RequestBody Product product) {
+    public ResponseEntity<Map<String, Object>> createProduct(@Valid @RequestBody Product product, BindingResult result) {
+        if (result.hasErrors()) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("message", result.getAllErrors().stream()
+                .map(ObjectError::getDefaultMessage)
+                .collect(Collectors.joining(", ")));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
         Product createdProduct = productService.createProduct(product);
         Map<String, Object> response = new HashMap<>();
         response.put("success", true);

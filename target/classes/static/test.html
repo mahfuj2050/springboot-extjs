@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>ExtJS Test</title>
+    
+    <link rel="stylesheet" type="text/css" href="https://cdn.sencha.com/ext/gpl/7.7.0/classic/theme-triton/resources/theme-triton-all.css">
+    <script type="text/javascript" src="https://cdn.sencha.com/ext/gpl/7.7.0/ext-all.js"></script>
+    
+    <script type="text/javascript">
+        Ext.onReady(function() {
+            Ext.create('Ext.panel.Panel', {
+                renderTo: Ext.getBody(),
+                title: 'ExtJS Test Panel',
+                width: 400,
+                height: 300,
+                html: '<h1>If you can see this, ExtJS is working!</h1>'
+            });
+        });
+    </script>
+</head>
+<body></body>
+</html>
